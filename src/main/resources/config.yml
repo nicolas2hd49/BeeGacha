@@ -1,0 +1,56 @@
+# BeeGacha Configuration
+
+# Base price for the first gacha spin
+# Formula: price = base-price * (10 ^ purchases)
+base-price: 1000.0
+
+# Cooldown in hours between uses
+cooldown-hours: 2
+
+# GUI rows (3 = default)
+gui-rows: 3
+
+# Slots that form the reel (middle row: 9..17)
+reel-slots:
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+
+# The slot index that shows the final result (center of middle row)
+result-slot: 13
+
+messages:
+  no-permission: "&cVocê não tem permissão para usar isso."
+  economy-missing: "&cEconomia não encontrada. Contate um administrador."
+  no-money: "&cVocê não tem dinheiro suficiente. Preço atual: &e${price}"
+  cooldown: "&cVocê precisa esperar &e{time} &cpara usar novamente."
+  opening: "&aAbrindo a roleta BeeGacha! Boa sorte! 🐝"
+  won: "&6Parabéns! Você ganhou: &e{reward}&6! 🎉"
+
+rewards:
+  common:
+    material: WHEAT
+    name: "&7Abelha Comum"
+    chance: 60
+    command: "givepet %player% bee_common"
+  rare:
+    material: HONEYCOMB
+    name: "&9Abelha Rara"
+    chance: 25
+    command: "givepet %player% bee_rare"
+  epic:
+    material: GOLD_BLOCK
+    name: "&5Abelha Épica"
+    chance: 10
+    command: "givepet %player% bee_epic"
+  legendary:
+    material: DIAMOND_BLOCK
+    name: "&6Abelha Lendária"
+    chance: 5
+    command: "givepet %player% bee_legendary"
