@@ -1,0 +1,20 @@
+name: BeeGacha
+version: 1.0.0
+main: br.com.beegacha.BeeGachaPlugin
+api-version: '1.21'
+description: Gacha plugin inspired by Blox Fruits with animated GUI roulette
+author: BeeGacha
+
+depend:
+  - Vault
+
+commands:
+  beegacha:
+    description: Open the BeeGacha roulette
+    usage: /beegacha
+    permission: beegacha.use
+
+permissions:
+  beegacha.use:
+    description: Allows the player to use the gacha
+    default: true
