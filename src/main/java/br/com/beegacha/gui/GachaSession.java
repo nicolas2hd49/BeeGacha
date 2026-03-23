@@ -2,15 +2,15 @@ package br.com.beegacha.gui;
 
 import br.com.beegacha.BeeGachaPlugin;
 import br.com.beegacha.model.Reward;
+import br.com.beegacha.utils.ItemBuilder;
+import br.com.beegacha.utils.MathUtil;
 import br.com.beegacha.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -113,15 +113,12 @@ public class GachaSession {
         inventory.setItem(RESULT_SLOT + 9, highlight); // bottom
     }
 
-    /** Creates a named, display-only glass-pane item. */
+    /** Creates a named, display-only glass-pane item using {@link ItemBuilder}. */
     private ItemStack makeGlass(Material material, String name) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.displayName(MessageUtils.colorize(name));
-            item.setItemMeta(meta);
-        }
-        return item;
+        return new ItemBuilder(material)
+                .name(name)
+                .hideFlags()
+                .build();
     }
 
     // -----------------------------------------------------------------------
@@ -153,15 +150,11 @@ public class GachaSession {
         }
     }
 
-    /** Builds an {@link ItemStack} that represents a reward in the reel. */
+    /** Builds an {@link ItemStack} that represents a reward in the reel using {@link ItemBuilder}. */
     private ItemStack makeRewardItem(Reward reward) {
-        ItemStack item = new ItemStack(reward.getMaterial());
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.displayName(MessageUtils.colorize(reward.getDisplayName()));
-            item.setItemMeta(meta);
-        }
-        return item;
+        return new ItemBuilder(reward.getMaterial())
+                .name(reward.getDisplayName())
+                .build();
     }
 
     // -----------------------------------------------------------------------
@@ -209,13 +202,13 @@ public class GachaSession {
 
     /**
      * Computes how many ticks to wait before the next reel update.
-     * Uses a quadratic ease-out: starts at 1 tick (fast), ramps to 6 ticks (slow).
+     * Uses {@link MathUtil#easeOutQuadratic} to ramp from 1 tick (fast)
+     * to 6 ticks (slow) as the spin progresses.
      */
     private long computeDelay() {
         double progress = (double) currentTick / totalTicks; // 0.0 → 1.0
-        // Quadratic ease-out: 1 tick at start, 6 ticks at end
-        long delay = 1 + Math.round(progress * progress * 5);
-        return Math.max(1, delay);
+        long delay = Math.round(MathUtil.easeOutQuadratic(progress, 1.0, 6.0));
+        return MathUtil.clamp(delay, 1L, 6L);
     }
 
     /**

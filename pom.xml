@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>BeeGacha</name>
-    <description>Gacha plugin for Paper 1.21.x (tested on 1.21.8)</description>
+    <description>Gacha plugin for Paper 1.21.8</description>
 
     <properties>
         <java.version>21</java.version>
@@ -32,11 +32,11 @@
     </repositories>
 
     <dependencies>
-        <!-- Paper API (1.21.4 artifact covers the full 1.21.x series including 1.21.8) -->
+        <!-- Paper API -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.4-R0.1-SNAPSHOT</version>
+            <version>1.21.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- Vault API -->
