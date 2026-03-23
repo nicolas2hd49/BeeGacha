@@ -1,5 +1,7 @@
 package br.com.beegacha.manager;
 
+import br.com.beegacha.utils.TimeUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -8,6 +10,7 @@ import java.util.UUID;
  * Tracks per-player cooldowns in memory.
  * Cooldown state is derived from the last-use timestamp stored in
  * {@link PlayerDataManager}, so this class delegates persistence there.
+ * Time helpers are provided by {@link TimeUtil}.
  */
 public class CooldownManager {
 
@@ -18,7 +21,7 @@ public class CooldownManager {
     private final Map<UUID, Long> lastUseMap = new HashMap<>();
 
     public CooldownManager(long cooldownHours) {
-        this.cooldownMillis = cooldownHours * 3600_000L;
+        this.cooldownMillis = TimeUtil.hoursToMillis(cooldownHours);
     }
 
     /**
@@ -39,8 +42,7 @@ public class CooldownManager {
      * Returns whether the player is currently in cooldown.
      */
     public boolean isOnCooldown(UUID uuid) {
-        long lastUse = getLastUse(uuid);
-        return lastUse > 0 && (System.currentTimeMillis() - lastUse) < cooldownMillis;
+        return TimeUtil.isOnCooldown(getLastUse(uuid), cooldownMillis);
     }
 
     /**
@@ -48,8 +50,6 @@ public class CooldownManager {
      * Returns {@code 0} if the player is not on cooldown.
      */
     public long getRemainingMillis(UUID uuid) {
-        if (!isOnCooldown(uuid)) return 0;
-        long elapsed = System.currentTimeMillis() - getLastUse(uuid);
-        return cooldownMillis - elapsed;
+        return TimeUtil.remainingMillis(getLastUse(uuid), cooldownMillis);
     }
 }

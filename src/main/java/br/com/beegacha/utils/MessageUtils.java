@@ -1,43 +1,44 @@
 package br.com.beegacha.utils;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 /**
- * Utility methods for translating legacy colour codes and formatting messages.
+ * Convenience façade that delegates to {@link ColorUtil} and {@link TimeUtil}.
+ *
+ * <p>Kept for backwards compatibility with existing code that calls
+ * {@code MessageUtils.colorize()} or {@code MessageUtils.formatCooldown()}.
+ * New code should prefer the dedicated utility classes directly.
  */
 public final class MessageUtils {
-
-    private static final LegacyComponentSerializer SERIALIZER =
-            LegacyComponentSerializer.legacyAmpersand();
 
     private MessageUtils() {}
 
     /**
-     * Translates {@code &} colour codes in the given string and returns an
-     * Adventure {@link Component}.
+     * Translates {@code &} colour codes and returns an Adventure {@link Component}.
+     *
+     * @see ColorUtil#colorize(String)
      */
     public static Component colorize(String text) {
-        return SERIALIZER.deserialize(text);
+        return ColorUtil.colorize(text);
     }
 
     /**
      * Translates {@code &} colour codes and returns a plain {@link String}
-     * with section-sign (§) colour codes suitable for legacy APIs.
+     * with section-sign (§) colour codes.
+     *
+     * @see ColorUtil#colorizeString(String)
      */
     public static String colorizeString(String text) {
-        return text.replace("&", "§");
+        return ColorUtil.colorizeString(text);
     }
 
     /**
-     * Formats a remaining-time duration (in milliseconds) into the Portuguese
-     * string "X horas, X minutos e X segundos".
+     * Formats a remaining-time duration (in milliseconds) as
+     * "X horas, X minutos e X segundos".
+     *
+     * @see TimeUtil#formatCooldown(long)
      */
     public static String formatCooldown(long millis) {
-        long seconds = millis / 1000;
-        long hours   = seconds / 3600;
-        long minutes = (seconds % 3600) / 60;
-        long secs    = seconds % 60;
-        return hours + " horas, " + minutes + " minutos e " + secs + " segundos";
+        return TimeUtil.formatCooldown(millis);
     }
 }

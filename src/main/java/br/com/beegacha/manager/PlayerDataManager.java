@@ -1,5 +1,6 @@
 package br.com.beegacha.manager;
 
+import br.com.beegacha.model.PlayerData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +20,9 @@ import java.util.UUID;
  * <p>Writes are batched: in-memory mutations mark the config as <em>dirty</em>
  * and a periodic auto-save task flushes it to disk every 5 minutes.
  * {@link #save()} is also called on plugin disable.
+ *
+ * <p>Player data can be accessed either as raw values or as
+ * {@link PlayerData} model objects.
  */
 public class PlayerDataManager {
 
@@ -60,6 +64,33 @@ public class PlayerDataManager {
         } catch (IOException e) {
             plugin.getLogger().severe("Could not save playerdata.yml: " + e.getMessage());
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // PlayerData model access
+    // -----------------------------------------------------------------------
+
+    /**
+     * Returns a {@link PlayerData} object for the given player, populated
+     * from persistent storage (or defaults if the player is new).
+     *
+     * @param uuid the player's UUID
+     * @return a new {@link PlayerData} instance with the player's current data
+     */
+    public PlayerData getPlayerData(UUID uuid) {
+        return new PlayerData(uuid, getPurchases(uuid), getLastUse(uuid));
+    }
+
+    /**
+     * Persists the values from the given {@link PlayerData} object to the
+     * in-memory YAML config and marks it dirty for the next save cycle.
+     *
+     * @param data the data to persist
+     */
+    public synchronized void savePlayerData(PlayerData data) {
+        dataConfig.set(data.getUuid() + ".purchases", data.getPurchases());
+        dataConfig.set(data.getUuid() + ".last-use",  data.getLastUse());
+        dirty = true;
     }
 
     // -----------------------------------------------------------------------

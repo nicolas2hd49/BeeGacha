@@ -2,6 +2,7 @@ package br.com.beegacha.commands;
 
 import br.com.beegacha.BeeGachaPlugin;
 import br.com.beegacha.utils.MessageUtils;
+import br.com.beegacha.utils.MathUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -69,10 +70,10 @@ public class BeeGachaCommand implements CommandExecutor {
             return true;
         }
 
-        // Compute progressive price: basePrice * (10 ^ purchases)
+        // Compute progressive price using MathUtil
         double basePrice  = plugin.getConfig().getDouble("base-price", 1000.0);
         int purchases     = plugin.getPlayerDataManager().getPurchases(uuid);
-        double price      = basePrice * Math.pow(10, purchases);
+        double price      = MathUtil.calculatePrice(basePrice, purchases);
 
         // Funds check
         if (!plugin.getEconomyManager().has(player, price)) {
